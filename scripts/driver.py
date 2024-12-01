@@ -89,5 +89,33 @@ def fetch_reviews_to_csv(app_id, output_file, max_reviews=None):
     print(f"Completed. Total reviews fetched: {total_reviews_fetched}")
 
 
-# Example usage
-fetch_reviews_to_csv(app_id=250900, output_file="../data/binding_of_isaac_reviews.csv", max_reviews=None)
+
+
+def choose_version():
+    """
+    Prompts the user to select between a mini version (quick test) or a full version
+    (complete dataset). Returns the selected version as a string ('mini' or 'full').
+    """
+    print("Please choose the version to run:")
+    print("1. Run Mini Version (for a quick test with a small dataset [~3500 entries])")
+    print("2. Run Full Version (for running with a complete dataset [~120000 entries])")
+    version = ""
+    while True:
+        # Get user input and strip any surrounding whitespace
+        choice = input("Enter '1' for Mini Version or '2' for Full Version: ").strip()
+        # Validate the input and return the corresponding version
+        if choice == '1':
+            print(f"You have selected the \"mini\" version.")
+            fetch_reviews_to_csv(app_id=1272320, output_file="../data/mini_reviews.csv", max_reviews=None)
+            return
+        elif choice == '2':
+            print(f"You have selected the \"full\" version.")
+            fetch_reviews_to_csv(app_id=250900, output_file="../data/binding_of_isaac_reviews.csv", max_reviews=None)
+            return
+        else:
+            # Provide feedback on invalid input
+            print("Invalid input. Please choose '1' for Mini Version or '2' for Full Version.")
+
+
+
+choose_version()
