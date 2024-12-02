@@ -1,0 +1,111 @@
+# Visualizzazioni per Topic Modeling
+
+## 1. Heatmap of Topic-Word Weights
+**Metodo**: `plot_topic_word_heatmap`
+
+- **Descrizione**:
+  Questo plot è una mappa di calore che visualizza i pesi delle parole più importanti (in base alla colonna `weight`) per ogni argomento (`topic_number`).
+  Ogni riga rappresenta una parola e ogni colonna rappresenta un argomento. Più il colore è scuro, maggiore è il peso.
+
+- **Utilità**:
+  Ti permette di identificare visivamente quali parole sono più significative per ciascun argomento.
+  Può rivelare somiglianze o sovrapposizioni tra argomenti.
+
+- **Esempio**:
+  Parole come "good" e "amazing" possono avere pesi elevati per il **Topic 0**, mentre parole come "play" e "hours" possono essere più rilevanti per il **Topic 2**.
+
+---
+
+## 2. Bar Chart of Topic Distribution
+**Metodo**: `plot_topic_distribution`
+
+- **Descrizione**:
+  Questo è un grafico a barre che mostra il peso totale (somma della colonna `weight`) di tutte le parole per ogni argomento.
+  Ogni barra rappresenta un argomento e l'altezza della barra rappresenta la somma dei pesi.
+
+- **Utilità**:
+  Ti aiuta a capire quanto ogni argomento contribuisce al dataset complessivo.
+  Argomenti con barre più alte contengono parole con pesi cumulativi maggiori.
+
+- **Esempio**:
+  **Topic 4** potrebbe avere un peso totale molto maggiore rispetto agli altri, indicando che è più dominante nel dataset.
+
+---
+
+## 3. Word Cloud
+**Metodo**: `generate_wordcloud`
+
+- **Descrizione**:
+  Questo plot genera una nuvola di parole (**word cloud**) in cui la dimensione di ogni parola rappresenta il suo peso (`weight`) per uno specifico argomento (`topic_number`).
+  Parole più grandi hanno un peso maggiore.
+
+- **Utilità**:
+  È un modo visivo e intuitivo per rappresentare le parole più importanti di un argomento.
+  Utile per report o presentazioni grazie alla sua attrattività visiva.
+
+- **Esempio**:
+  Per il **Topic 1**, parole come "love" e "yes" potrebbero essere rappresentate più grandi di altre parole come "money" o "alright".
+
+---
+
+## 4. Scatter Plot of Word Weights
+**Metodo**: `plot_word_weights_scatter`
+
+- **Descrizione**:
+  Un grafico a dispersione (**scatter plot**) che mostra i pesi delle parole per uno specifico argomento.
+  L'asse x rappresenta le parole e l'asse y rappresenta il peso.
+
+- **Utilità**:
+  Ti permette di vedere la distribuzione dei pesi per le parole di un argomento.
+  Puoi identificare rapidamente parole con pesi molto elevati o molto bassi.
+
+- **Esempio**:
+  Per il **Topic 3**, potresti vedere che parole come "10" e "cool" hanno pesi più alti rispetto a parole come "die" o "pain".
+
+---
+
+## 5. Cumulative Weight Distribution
+**Metodo**: `plot_cumulative_weight_distribution`
+
+- **Descrizione**:
+  Questo plot mostra la distribuzione cumulativa dei pesi delle parole per un argomento specifico.
+  L'asse x rappresenta le parole ordinate per peso (dal più alto al più basso), mentre l'asse y rappresenta il peso cumulativo in percentuale.
+
+- **Utilità**:
+  Ti aiuta a capire quante parole contribuiscono maggiormente al peso totale di un argomento.
+  Spesso poche parole rappresentano una parte significativa del peso totale (principio di Pareto: 80/20).
+
+- **Esempio**:
+  Per il **Topic 2**, il grafico potrebbe mostrare che il 20% delle parole contribuisce all'80% del peso totale.
+
+---
+
+## 6. Top Words Bar Chart
+**Metodo**: `plot_top_words_per_topic`
+
+- **Descrizione**:
+  Un grafico a barre che mostra le `n` parole principali (per peso) per un argomento specifico.
+  L'asse x rappresenta le parole e l'asse y rappresenta il loro peso.
+
+- **Utilità**:
+  Ti consente di identificare rapidamente le parole più importanti di un argomento.
+  Fornisce un'alternativa più dettagliata rispetto alla word cloud.
+
+- **Esempio**:
+  Per il **Topic 0**, potresti vedere che "ok", "amazing", e "game" hanno i pesi più alti.
+
+---
+
+## 7. Parallel Coordinates Plot
+**Metodo**: `plot_parallel_coordinates`
+
+- **Descrizione**:
+  Questo è un grafico a coordinate parallele che confronta i pesi delle parole principali attraverso tutti gli argomenti.
+  Ogni linea rappresenta una parola e attraversa diversi assi (argomenti) in base al suo peso.
+
+- **Utilità**:
+  Ti permette di vedere se alcune parole sono rilevanti in più argomenti o se sono specifiche di un solo argomento.
+  Aiuta a identificare correlazioni o sovrapposizioni tra gli argomenti.
+
+- **Esempio**:
+  Parole come "game" potrebbero avere un peso alto in più argomenti, mentre parole come "crying" potrebbero essere rilevanti solo per un argomento.
