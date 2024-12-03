@@ -1,3 +1,95 @@
+# Plots of sentiment and emotion
+---
+
+### **1. Scatter Plot: `plot_sentiment_vs_emotion_scores(df, output_dir)`**
+   - **Significato del grafico**:
+     - Questo scatter plot rappresenta la relazione tra il punteggio di sentimento e il punteggio di emozione.
+     - Ogni punto nel grafico rappresenta una recensione, posizionata in base al punteggio di sentimento (asse X) e al punteggio di emozione (asse Y).
+   - **Utilità**:
+     - Aiuta a visualizzare se c'è una correlazione tra l'intensità del sentimento e l'intensità dell'emozione.
+     - Ad esempio, potrebbe evidenziare che sentimenti molto negativi sono spesso associati a emozioni intense come la rabbia o la tristezza.
+
+---
+
+### **2. Box Plot: `plot_emotion_scores_by_sentiment(df, output_dir)`**
+   - **Significato del grafico**:
+     - Questo box plot mostra la distribuzione dei punteggi delle emozioni per ciascuna categoria di sentimento (es. "1 stella", "5 stelle").
+     - Le "box" rappresentano la distribuzione centrale dei dati (dal 1° al 3° quartile), mentre le linee ("whiskers") mostrano l'intervallo più ampio dei dati. Gli "outlier" sono punti al di fuori di questo intervallo.
+   - **Utilità**:
+     - Evidenzia la variazione dei punteggi delle emozioni per ciascun sentimento.
+     - Ad esempio, potresti vedere che recensioni con sentimenti negativi hanno una maggiore variazione nelle emozioni (es. tristezza, rabbia).
+
+---
+
+### **3. Heatmap: `plot_emotion_sentiment_heatmap(df, output_dir)`**
+   - **Significato del grafico**:
+     - Questa heatmap mostra la frequenza delle combinazioni di sentimenti ed emozioni.
+     - Le righe rappresentano i sentimenti (es. "1 stella"), mentre le colonne rappresentano le emozioni (es. tristezza, gioia). I colori indicano il numero di occorrenze per ogni combinazione.
+   - **Utilità**:
+     - Aiuta a individuare quali emozioni sono più comuni per determinati sentimenti.
+     - Ad esempio, potresti notare che la "tristezza" è predominante nei sentimenti negativi, mentre la "gioia" è più frequente nei sentimenti positivi.
+
+
+### **5. Bar Chart: `plot_average_emotion_scores_by_sentiment(df, output_dir)`**
+   - **Significato del grafico**:
+     - Questo grafico a barre mostra il punteggio medio delle emozioni per ciascuna categoria di sentimento.
+     - Ogni barra rappresenta un sentimento (es. "1 stella") e l'altezza indica la media dei punteggi di emozione associati.
+   - **Utilità**:
+     - Fornisce una panoramica quantitativa dell'intensità emotiva media per ciascun tipo di sentimento.
+     - Può mostrare, ad esempio, che recensioni con sentimenti molto negativi hanno punteggi di emozioni più alti, suggerendo emozioni intense come rabbia o tristezza.
+
+
+### **Funzione: `plot_sentiment_distribution(df, output_dir)`**
+   - **Significato**:
+     - Questo grafico a barre rappresenta la **Distribuzione dei Sentimenti**.
+     - Mostra quante recensioni appartengono a ciascuna categoria di sentimento, ad esempio "1 stella", "5 stelle".
+   - **Utilità**:
+     - Permette di capire quale tipo di sentimenti prevalgono nel dataset.
+     - Ideale per un’analisi generale della polarità delle recensioni.
+
+---
+
+### **Funzione: `plot_emotion_distribution(df, output_dir)`**
+   - **Significato**:
+     - Questo grafico a barre rappresenta la **Distribuzione delle Emozioni**.
+     - Evidenzia quanto spesso ogni emozione (ad esempio, tristezza, gioia, rabbia) è espressa nelle recensioni.
+   - **Utilità**:
+     - Aiuta a identificare il tono emotivo prevalente nelle recensioni.
+     - Fornisce un livello di dettaglio maggiore rispetto alla semplice analisi del sentimento.
+
+---
+
+### **Funzione: `plot_sentiment_scores(df, output_dir)`**
+   - **Significato**:
+     - Questo istogramma rappresenta la **Distribuzione dei Punteggi di Sentimento**.
+     - Mostra l'intensità dei sentimenti espressi, con valori che vanno da debole a forte (es. punteggi prossimi a 0.7 indicano un sentimento chiaro).
+   - **Utilità**:
+     - Offre informazioni sull'intensità delle opinioni, distinguendo tra recensioni lievemente negative o fortemente negative.
+
+---
+
+### **Funzione: `plot_emotion_scores(df, output_dir)`**
+   - **Significato**:
+     - Questo istogramma rappresenta la **Distribuzione dei Punteggi delle Emozioni**.
+     - Indica quanto sono intense le emozioni (ad esempio, quanta tristezza o gioia è presente).
+   - **Utilità**:
+     - Permette di analizzare la forza emotiva espressa dagli utenti, aiutando a comprendere meglio il tono generale delle recensioni.
+
+---
+
+### **Funzione: `plot_emotion_by_sentiment(df, output_dir)`**
+   - **Significato**:
+     - Questo grafico a barre raggruppate rappresenta le **Emozioni per Sentimento**.
+     - Mostra come le emozioni (ad esempio, tristezza, gioia) sono distribuite all'interno di ciascun sentimento (ad esempio, "1 stella" o "5 stelle").
+   - **Utilità**:
+     - Fornisce una comprensione approfondita della relazione tra sentimenti ed emozioni.
+     - Aiuta a vedere, ad esempio, che "tristezza" è più comune nei sentimenti negativi, mentre "gioia" prevale nei sentimenti positivi.
+
+---
+
+Ogni funzione è progettata per salvare un grafico che corrisponde a una di queste analisi, fornendo una visione dettagliata del dataset sotto vari punti di vista.
+
+
 # Visualizzazioni per Topic Modeling
 
 ## 1. Heatmap of Topic-Word Weights
@@ -109,3 +201,55 @@
 
 - **Esempio**:
   Parole come "game" potrebbero avere un peso alto in più argomenti, mentre parole come "crying" potrebbero essere rilevanti solo per un argomento.
+
+---
+
+### **Funzione: `plot_sentiment_distribution(df, output_dir)`**
+   - **Significato**:
+     - Questo grafico a barre rappresenta la **Distribuzione dei Sentimenti**.
+     - Mostra quante recensioni appartengono a ciascuna categoria di sentimento, ad esempio "1 stella", "5 stelle".
+   - **Utilità**:
+     - Permette di capire quale tipo di sentimenti prevalgono nel dataset.
+     - Ideale per un’analisi generale della polarità delle recensioni.
+
+---
+
+### **Funzione: `plot_emotion_distribution(df, output_dir)`**
+   - **Significato**:
+     - Questo grafico a barre rappresenta la **Distribuzione delle Emozioni**.
+     - Evidenzia quanto spesso ogni emozione (ad esempio, tristezza, gioia, rabbia) è espressa nelle recensioni.
+   - **Utilità**:
+     - Aiuta a identificare il tono emotivo prevalente nelle recensioni.
+     - Fornisce un livello di dettaglio maggiore rispetto alla semplice analisi del sentimento.
+
+---
+
+### **Funzione: `plot_sentiment_scores(df, output_dir)`**
+   - **Significato**:
+     - Questo istogramma rappresenta la **Distribuzione dei Punteggi di Sentimento**.
+     - Mostra l'intensità dei sentimenti espressi, con valori che vanno da debole a forte (es. punteggi prossimi a 0.7 indicano un sentimento chiaro).
+   - **Utilità**:
+     - Offre informazioni sull'intensità delle opinioni, distinguendo tra recensioni lievemente negative o fortemente negative.
+
+---
+
+### **Funzione: `plot_emotion_scores(df, output_dir)`**
+   - **Significato**:
+     - Questo istogramma rappresenta la **Distribuzione dei Punteggi delle Emozioni**.
+     - Indica quanto sono intense le emozioni (ad esempio, quanta tristezza o gioia è presente).
+   - **Utilità**:
+     - Permette di analizzare la forza emotiva espressa dagli utenti, aiutando a comprendere meglio il tono generale delle recensioni.
+
+---
+
+### **Funzione: `plot_emotion_by_sentiment(df, output_dir)`**
+   - **Significato**:
+     - Questo grafico a barre raggruppate rappresenta le **Emozioni per Sentimento**.
+     - Mostra come le emozioni (ad esempio, tristezza, gioia) sono distribuite all'interno di ciascun sentimento (ad esempio, "1 stella" o "5 stelle").
+   - **Utilità**:
+     - Fornisce una comprensione approfondita della relazione tra sentimenti ed emozioni.
+     - Aiuta a vedere, ad esempio, che "tristezza" è più comune nei sentimenti negativi, mentre "gioia" prevale nei sentimenti positivi.
+
+---
+
+Ogni funzione è progettata per salvare un grafico che corrisponde a una di queste analisi, fornendo una visione dettagliata del dataset sotto vari punti di vista.
