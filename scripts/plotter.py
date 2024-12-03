@@ -261,7 +261,6 @@ def plot_topic_word_heatmap(df, output_dir, num_words=10):
     plt.ylabel('Words')
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, 'topic_word_heatmap.png'))
-    plt.savefig(output_dir)
 
 
 def plot_word_weights_scatter(df, output_dir, topic_number ):
@@ -526,8 +525,6 @@ def run_analysis(config, n_top_words=10):
 
     # Analisi degli argomenti
     analyze_topics(topic_df, config['topic_output_dir'], n_top_words=n_top_words)
-
-
 
 if __name__ == '__main__':
     # Configurazione dei percorsi
