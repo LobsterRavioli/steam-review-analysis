@@ -19,44 +19,45 @@ def load_and_process_data(data):
     df['emotion_score'] = df['emotion'].apply(lambda x: ast.literal_eval(x)[0]['score'])
     return df
 
-def plot_sentiment_trend_over_time(df, output_dir):
+
+def plot_star_rating_trend_over_time(df, output_dir):
     """
-    Plot the average sentiment score over time and save it locally.
-    Assumes a 'timestamp' column in the dataset with datetime format.
+    Plot the average star rating trend over time and save it locally with enhanced readability.
+
+    Args:
+    - df (pd.DataFrame): DataFrame containing 'timestamp' and 'sentiment_label'.
+    - output_dir (str): Directory where the plot will be saved.
+
+    Returns:
+    - None: Saves the trend plot to the specified directory.
     """
     if 'timestamp' not in df:
-        print("The dataset does not contain a 'timestamp' column for temporal analysis.")
+        print("Error: 'timestamp' column is missing in the dataset.")
         return
 
-    df['date'] = pd.to_datetime(df['timestamp']).dt.date
-    daily_sentiment = df.groupby('date')['sentiment_score'].mean()
-    plt.figure(figsize=(10, 6))
-    daily_sentiment.plot()
-    plt.title('Sentiment Trend Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Average Sentiment Score')
-    plt.grid(True, alpha=0.3)
-    plt.savefig(os.path.join(output_dir, 'sentiment_trend_over_time.png'))
-    plt.close()
+    # Extract star rating as a numeric value
+    df['star_rating'] = df['sentiment_label'].str.extract(r'(\d+)').astype(float)
 
-def plot_sentiment_trend_over_time(df, output_dir):
-    """
-    Plot the average sentiment score over time and save it locally.
-    Assumes a 'timestamp' column in the dataset with datetime format.
-    """
-    if 'timestamp' not in df:
-        print("The dataset does not contain a 'timestamp' column for temporal analysis.")
-        return
-
+    # Ensure 'timestamp' is in datetime format and extract the date
     df['date'] = pd.to_datetime(df['timestamp']).dt.date
-    daily_sentiment = df.groupby('date')['sentiment_score'].mean()
-    plt.figure(figsize=(10, 6))
-    daily_sentiment.plot()
-    plt.title('Sentiment Trend Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Average Sentiment Score')
-    plt.grid(True, alpha=0.3)
-    plt.savefig(os.path.join(output_dir, 'sentiment_trend_over_time.png'))
+
+    # Calculate the average star rating per day
+    daily_star_rating = df.groupby('date')['star_rating'].mean()
+
+    # Plot the trend with enhanced aesthetics
+    plt.figure(figsize=(12, 6))
+    plt.plot(daily_star_rating.index, daily_star_rating.values, marker='o', linestyle='-', linewidth=2, alpha=0.8)
+    plt.title('Star Rating Trend Over Time', fontsize=16, pad=20)
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Average Star Rating', fontsize=12)
+    plt.xticks(rotation=45, fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
+    plt.tight_layout()
+
+    # Save the plot
+    output_path = os.path.join(output_dir, 'star_rating_trend_over_time.png')
+    plt.savefig(output_path, dpi=300)
     plt.close()
 
 def plot_sentiment_vs_review_length(df, output_dir):
@@ -122,56 +123,97 @@ def plot_emotion_sentiment_heatmap(df, output_dir):
     plt.savefig(os.path.join(output_dir, 'emotion_sentiment_heatmap.png'))
     plt.close()
 
-def plot_sentiment_vs_emotion_scores(df, output_dir):
+
+
+
+def emotion_accuracy(df, output_dir):
     """
-    Create a scatter plot for sentiment scores vs emotion scores and save it locally.
+    Create a bar chart for the model's accuracy by sentiment and save it locally.
+    Args:
+    - df (pd.DataFrame): DataFrame containing 'sentiment_label' and 'accuracy' columns.
+    - output_dir (str): Directory where the plot will be saved.
+
+    Returns:
+    - None: Saves the bar chart to the specified directory.
     """
-    plt.figure(figsize=(8, 5))
-    plt.scatter(df['sentiment_score'], df['emotion_score'], alpha=0.7)
-    plt.title('Sentiment Scores vs Emotion Scores')
-    plt.xlabel('Sentiment Score')
-    plt.ylabel('Emotion Score')
-    plt.grid(True, alpha=0.3)
-    plt.savefig(os.path.join(output_dir, 'sentiment_vs_emotion_scores.png'))
+
+    # Ensure the column names align with the intention
+    avg_accuracy = df.groupby('emotion_label')['emotion_score'].mean()
+
+    # Create the bar chart
+    plt.figure(figsize=(8, 8))
+    avg_accuracy.plot(kind='bar')
+    plt.title('Accuracy of the model')
+    plt.xlabel('Prediciton on Emotion')
+    plt.ylabel('Accuracy Mean')
+    plt.xticks(rotation=45)
+
+    # Save the plot
+    output_path = os.path.join(output_dir, 'accuracy_of_emotion.png')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-def plot_average_emotion_scores_by_sentiment(df, output_dir):
+def sentiment_accuracy(df, output_dir):
     """
-    Create a bar chart for average emotion scores by sentiment and save it locally.
+    Create a bar chart for the model's accuracy by sentiment and save it locally.
+    Args:
+    - df (pd.DataFrame): DataFrame containing 'sentiment_label' and 'accuracy' columns.
+    - output_dir (str): Directory where the plot will be saved.
+
+    Returns:
+    - None: Saves the bar chart to the specified directory.
     """
-    avg_scores = df.groupby('sentiment_label')['emotion_score'].mean()
-    plt.figure(figsize=(8, 5))
-    avg_scores.plot(kind='bar')
-    plt.title('Average Emotion Scores by Sentiment')
-    plt.xlabel('Sentiment Label')
-    plt.ylabel('Average Emotion Score')
-    plt.savefig(os.path.join(output_dir, 'average_emotion_scores_by_sentiment.png'))
+
+    # Ensure the column names align with the intention
+    avg_accuracy = df.groupby('sentiment_label')['sentiment_score'].mean()
+
+    # Create the bar chart
+    plt.figure(figsize=(8, 8))
+    avg_accuracy.plot(kind='bar')
+    plt.title('Accuracy of the model')
+    plt.xlabel('Prediciton on Star Rating')
+    plt.ylabel('Accuracy Mean')
+    plt.xticks(rotation=45)
+
+    # Save the plot
+    output_path = os.path.join(output_dir, 'accuracy_of_sentiment.png')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
 
 
 
-def plot_emotion_scores_by_sentiment(df, output_dir):
+
+def emotion_distribution_piechart(df, output_dir):
     """
-    Create a box plot for emotion scores grouped by sentiment labels and save it locally.
+    Create a pie chart showing the distribution of tuples by emotion_label and save it locally.
+
+    Args:
+    - df (pd.DataFrame): DataFrame containing 'emotion_label' column.
+    - output_dir (str): Directory where the plot will be saved.
+
+    Returns:
+    - None: Saves the pie chart to the specified directory.
     """
-    plt.figure(figsize=(10, 6))
-    df.boxplot(column='emotion_score', by='sentiment_label', grid=False)
-    plt.title('Emotion Scores by Sentiment')
-    plt.suptitle('')  # Remove the automatic title
-    plt.xlabel('Sentiment Label')
-    plt.ylabel('Emotion Score')
-    plt.savefig(os.path.join(output_dir, 'emotion_scores_by_sentiment.png'))
+    # Count the number of tuples per emotion label
+    counts = df['sentiment_label'].value_counts()
+
+    # Create the pie chart
+    plt.figure(figsize=(8, 8))
+    counts.plot(kind='pie', autopct='%1.1f%%', startangle=90, cmap='viridis', legend=True)
+    plt.title('Distribution of Rating stars')
+    plt.ylabel('')  # Remove y-axis label for a cleaner pie chart
+
+    # Save the chart
+    output_path = os.path.join(output_dir, 'sentiment_label_distribution_pie_chart.png')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
-
-
-
 
 
 def plot_sentiment_distribution(df, output_dir):
     """
     Create a bar chart for sentiment distribution and save it locally.
     """
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(10, 9))
     df['sentiment_label'].value_counts().plot(kind='bar')
     plt.title('Sentiment Distribution')
     plt.xlabel('Sentiment')
@@ -183,7 +225,7 @@ def plot_emotion_distribution(df, output_dir):
     """
     Create a bar chart for emotion distribution and save it locally.
     """
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(10, 9))
     df['emotion_label'].value_counts().plot(kind='bar')
     plt.title('Emotion Distribution')
     plt.xlabel('Emotion')
@@ -191,35 +233,14 @@ def plot_emotion_distribution(df, output_dir):
     plt.savefig(os.path.join(output_dir, 'emotion_distribution.png'))
     plt.close()
 
-def plot_sentiment_scores(df, output_dir):
-    """
-    Create a histogram for sentiment scores and save it locally.
-    """
-    plt.figure(figsize=(8, 5))
-    plt.hist(df['sentiment_score'], bins=10, alpha=0.7)
-    plt.title('Sentiment Scores Distribution')
-    plt.xlabel('Score')
-    plt.ylabel('Frequency')
-    plt.savefig(os.path.join(output_dir, 'sentiment_scores_distribution.png'))
-    plt.close()
 
-def plot_emotion_scores(df, output_dir):
-    """
-    Create a histogram for emotion scores and save it locally.
-    """
-    plt.figure(figsize=(8, 5))
-    plt.hist(df['emotion_score'], bins=10, alpha=0.7)
-    plt.title('Emotion Scores Distribution')
-    plt.xlabel('Score')
-    plt.ylabel('Frequency')
-    plt.savefig(os.path.join(output_dir, 'emotion_scores_distribution.png'))
-    plt.close()
+
 
 def plot_emotion_by_sentiment(df, output_dir):
     """
     Create a grouped bar chart for emotion by sentiment and save it locally.
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 11))
     df.groupby(['sentiment_label', 'emotion_label']).size().unstack().plot(kind='bar', stacked=True)
     plt.title('Emotion by Sentiment')
     plt.xlabel('Sentiment')
@@ -238,10 +259,6 @@ def emotion_pie_chart(df, output_dir):
     plt.title('Emotion Distribution')
     plt.savefig(os.path.join(output_dir, 'emotion_scores_by_sentiment.png'))
     plt.close()
-
-
-
-
 
 
 def plot_topic_word_heatmap(df, output_dir, num_words=10):
@@ -308,7 +325,7 @@ def plot_topic_distribution(df, output_dir):
     topic_weights = df.groupby('topic_number')['weight'].sum().sort_values(ascending=False)
 
     plt.figure(figsize=(10, 6))
-    topic_weights.plot(kind='bar', color='skyblue', alpha=0.8)
+    topic_weights.plot(kind='bar', alpha=0.8)
     plt.title('Topic Distribution by Total Weight')
     plt.xlabel('Topic Number')
     plt.ylabel('Total Weight')
@@ -347,7 +364,7 @@ def plot_top_words_per_topic(df, topic_number, output_dir, n=10):
     topic_df = df[df['topic_number'] == topic_number].nlargest(n, 'weight')
 
     plt.figure(figsize=(10, 6))
-    plt.bar(topic_df['word'], topic_df['weight'], color='skyblue')
+    plt.bar(topic_df['word'], topic_df['weight'])
     plt.title(f'Top {n} Words for Topic {topic_number}')
     plt.xlabel('Word')
     plt.ylabel('Weight')
@@ -463,19 +480,18 @@ def analyze_sentiment_and_emotions(df, output_dir):
         df (pd.DataFrame): DataFrame contenente i dati elaborati.
         output_dir (str): Directory dove salvare i grafici.
     """
-    plot_sentiment_trend_over_time(df, output_dir)
+
     plot_positive_negative_ratio(df, output_dir)
     plot_emotion_distribution_by_rating(df, output_dir)
     plot_sentiment_distribution(df, output_dir)
     plot_emotion_distribution(df, output_dir)
-    plot_sentiment_scores(df, output_dir)
-    plot_emotion_scores(df, output_dir)
     plot_emotion_by_sentiment(df, output_dir)
     plot_emotion_sentiment_heatmap(df, output_dir)
-    plot_emotion_scores_by_sentiment(df, output_dir)
-    plot_sentiment_vs_emotion_scores(df, output_dir)
-    plot_average_emotion_scores_by_sentiment(df, output_dir)
+    emotion_distribution_piechart(df, output_dir)
+    emotion_accuracy(df, output_dir)
+    sentiment_accuracy(df, output_dir)
     emotion_pie_chart(df, output_dir)
+    plot_star_rating_trend_over_time(df,output_dir)
 
 
 def analyze_topics(df, output_dir, n_top_words=10):
