@@ -7,6 +7,9 @@ from pandas.plotting import parallel_coordinates
 import os
 import ast
 
+from scripts.utility import game_selection
+
+
 def load_and_process_data(data):
     """
     Load and process the dataset for analysis.
@@ -543,14 +546,15 @@ def run_analysis(config, n_top_words=10):
     analyze_topics(topic_df, config['topic_output_dir'], n_top_words=n_top_words)
 
 if __name__ == '__main__':
+    foldername = game_selection()
     # Configurazione dei percorsi
     config = configure_paths(
-        sentiment_results='../data/Output_SentimentAnalysis.csv',
-        topic_results='../data/Topic_reviews.csv',
-        timestamps_file='../data/binding_of_isaac_reviews.csv',
-        sentiment_output_dir='../plots/sentiment_emotion_plots',
-        topic_output_dir='../plots/topic_modelling_plots',
-        merged_output_file='merged_reviews_with_timestamps.csv'
+        sentiment_results=f'../data/{foldername}/Output_SentimentAnalysis.csv',
+        topic_results=f'../data/{foldername}/Topic_modeling.csv',
+        timestamps_file=f'../data/{foldername}/Reviews.csv',
+        sentiment_output_dir=f'../data/{foldername}/plots/sentiment_emotion_plots',
+        topic_output_dir=f'../data/{foldername}/plots/topic_modelling_plots',
+        merged_output_file=f'../data/{foldername}/merged_reviews_with_timestamps.csv'
     )
 
     # Esecuzione dell'analisi

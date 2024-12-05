@@ -1,13 +1,35 @@
 import requests
 import time
 import csv
+from pathlib import Path
+
+
+
+def get_game_details_from_appid(appid):
+    """
+    Get name of the game from the appid
+    :param appid:
+    :return: The name of the game (str), or a message indicating an error or unavailable details.:
+    """
+    url = f"https://store.steampowered.com/api/appdetails?appids={appid}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        if str(appid) in data and data[str(appid)]["success"]:
+            return data[str(appid)]["data"]["name"].replace(" ","")
+        else:
+            return "Details not available for this AppID."
+    else:
+        return f"Request error: {response.status_code}"
+
 
 
 def fetch_reviews_to_csv(app_id, output_file, max_reviews=None):
     """
     Fetch all reviews for a Steam app ID using the Steam Reviews API and save them in a CSV file.
 
-    :param app_id: The app ID of the game (e.g., 250900 for The Binding of Isaac: Rebirth).
+    :param app_id: The app ID of the game (e.g., 359550 for Rainbow Six Siege).
     :param output_file: Path to save the reviews (CSV format).
     :param max_reviews: Maximum number of reviews to fetch. If None, fetch all available.
     """
@@ -34,6 +56,7 @@ def fetch_reviews_to_csv(app_id, output_file, max_reviews=None):
                 "language": "english",  # Language of reviews
                 "cursor": cursor,  # Pagination cursor
                 "num_per_page": 100,  # Maximum reviews per request
+                "purchase_type" : "all" #Fetch reviews from both Steam purchases and other purchase types
             }
             response = requests.get(url, params=params)
             if response.status_code != 200:
@@ -89,33 +112,53 @@ def fetch_reviews_to_csv(app_id, output_file, max_reviews=None):
     print(f"Completed. Total reviews fetched: {total_reviews_fetched}")
 
 
-
-
 def choose_version():
     """
     Prompts the user to select between a mini version (quick test) or a full version
-    (complete dataset). Returns the selected version as a string ('mini' or 'full').
+    (complete dataset).
     """
     print("Please choose the version to run:")
-    print("1. Run Mini Version (for a quick test with a small dataset [~3500 entries])")
-    print("2. Run Full Version (for running with a complete dataset [~120000 entries])")
-    version = ""
+    print("1. Run Mini Version (for a quick test with a small dataset [~3000 entries])")
+    print("2. Run Full Version")
+
     while True:
         # Get user input and strip any surrounding whitespace
         choice = input("Enter '1' for Mini Version or '2' for Full Version: ").strip()
         # Validate the input and return the corresponding version
         if choice == '1':
-            print(f"You have selected the \"mini\" version.")
-            fetch_reviews_to_csv(app_id=1272320, output_file="../data/mini_reviews.csv", max_reviews=None)
-            return
+            print(f"You have selected the 'mini' version.")
+            app_id = 1959140
+            gamename = "mini"
+            break
         elif choice == '2':
-            print(f"You have selected the \"full\" version.")
-            fetch_reviews_to_csv(app_id=250900, output_file="../data/binding_of_isaac_reviews.csv", max_reviews=None)
-            return
+            print("You have selected the 'full' version.")
+            gameconfirmed=False
+            while not gameconfirmed:
+                app_id = input(
+                    "Please enter the AppID of the game for which you want to fetch reviews"
+                    " (e.g., 359550 for Rainbow Six Siege): ")
+                gamename = get_game_details_from_appid(app_id)
+                confirmation = input(
+                    f"The game you selected is \"{gamename}\". Is this correct? (Y/N): ").strip().upper()
+                if confirmation == "Y":
+                    print("Game confirmed. Proceeding with the review fetch...")
+                    gameconfirmed = True
+                elif confirmation == "N":
+                    print("Let's try again. Please re-enter the AppID.")
+                else:
+                    print("Invalid input. Please type 'Y' for Yes or 'N' for No.")
+            break
         else:
-            # Provide feedback on invalid input
             print("Invalid input. Please choose '1' for Mini Version or '2' for Full Version.")
 
+    # Create the directory
+    directory_path = Path(f"../data/{gamename}")
+    directory_path.mkdir(parents=True, exist_ok=True)
+
+    fetch_reviews_to_csv(app_id=f"{app_id}", output_file=f"{directory_path}/Reviews.csv", max_reviews=None)
 
 
-choose_version()
+
+if __name__ == '__main__':
+    choose_version()
+

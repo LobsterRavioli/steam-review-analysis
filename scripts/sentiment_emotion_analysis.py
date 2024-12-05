@@ -1,9 +1,13 @@
 import csv
+from pathlib import Path
 
 import pandas
 from tqdm import tqdm
 from transformers import pipeline,AutoTokenizer
 import re
+
+from scripts.utility import game_selection
+
 
 def sentiment_analysis(output_file,df):
     fields = [
@@ -79,33 +83,9 @@ def sentiment_analysis(output_file,df):
 
 
 
-def choose_version():
-    """
-    Prompts the user to select between a mini version (quick test) or a full version
-    (complete dataset). Returns the selected version as a string ('mini' or 'full').
-    """
-    print("Please choose the version to run:")
-    print("1. Run Mini Version (for a quick test with a small dataset [~3000 entries])")
-    print("2. Run Full Version (for running with a complete dataset [~120000 entries])")
-    version = ""
-    while True:
-        # Get user input and strip any surrounding whitespace
-        choice = input("Enter '1' for Mini Version or '2' for Full Version: ").strip()
-        # Validate the input and return the corresponding version
-        if choice == '1':
-            print(f"You have selected the \"mini\" version.")
-            sentiment_analysis("../data/miniOutput_SentimentAnalysis.csv",
-                               pandas.read_csv("../data/mini_reviews.csv"))
-            return
-        elif choice == '2':
-            print(f"You have selected the \"full\" version.")
-            sentiment_analysis("../data/Output_SentimentAnalysis.csv",
-                               pandas.read_csv("../data/binding_of_isaac_reviews.csv"))
-            return
-        else:
-            # Provide feedback on invalid input
-            print("Invalid input. Please choose '1' for Mini Version or '2' for Full Version.")
 
-
-choose_version()
+if __name__ == '__main__':
+    foldername = game_selection()
+    sentiment_analysis(f"../data/{foldername}/Output_SentimentAnalysis.csv",
+                       pandas.read_csv(f"../data/{foldername}/Reviews.csv"))
 
