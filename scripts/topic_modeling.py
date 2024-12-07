@@ -1,4 +1,5 @@
 import csv
+import re
 
 import pandas as pd
 from nltk import WordNetLemmatizer
@@ -22,15 +23,17 @@ def generate_topics(model, feature_names, num_top_words,output_file):
             #Heaviest feature first
             for i in topic.argsort()[:-num_top_words - 1:-1]:
                 word = feature_names[i]  # Prendi il nome della parola
-                if word != "game":
-                    weight = topic[i]
-                    writer.writerow({"topic_number": topic_idx, "word": word, "weight": weight})
+                weight = topic[i]
+                writer.writerow({"topic_number": topic_idx, "word": word, "weight": weight})
 
 
 if __name__ == "__main__":
+    domain_stopword=["game","play","player","fps"]
+
     foldername = game_selection()
     df = pd.read_csv(f'../data/{foldername}/Reviews.csv')
     output_file = f'../data/{foldername}/Topic_modeling.csv'
+
 
     # Preprocessing
     nltk.download('stopwords')
@@ -38,6 +41,9 @@ if __name__ == "__main__":
     stop_words = set(stopwords.words('english'))
     lemmatizer = WordNetLemmatizer()
 
+    #Simplify game name, the folder has the name of the game
+    gamename = re.sub(r'[^a-zA-Z]', '', foldername).lower()
+    domain_stopword.append(gamename)
 
     # Load dataset and drop null reviews
     print("Loading data...")
@@ -46,8 +52,18 @@ if __name__ == "__main__":
 
     print("Cleaning data...")
     # Clean, remove stop words, and lemmatize
-    cleaned_reviews= [' '.join([lemmatizer.lemmatize(word) for word in review.lower().split() if word not in stop_words])
-                      for review in reviews]
+    cleaned_reviews = [
+        ' '.join([
+            lemmatizer.lemmatize(word)
+            for word in re.sub(r'[^\w\s]', '', review.lower()).split()
+            if word not in stop_words
+        ])
+        for review in reviews
+    ]
+
+    # Remove domain stopword
+    cleaned_reviews = [' '.join([word for word in review.split() if word not in domain_stopword]) for
+                         review in cleaned_reviews]
 
     # Term frequency
     print("Calculating TF-IDF vectors...")
@@ -62,5 +78,5 @@ if __name__ == "__main__":
 
     print(f"perplexity:{lda.perplexity(tfidf_matrix)}")
 
-    generate_topics(lda, vectorizer.get_feature_names_out(), 11,output_file)
+    generate_topics(lda, vectorizer.get_feature_names_out(), 10,output_file)
 
