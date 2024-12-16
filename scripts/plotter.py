@@ -34,15 +34,28 @@ def plot_star_rating_trend_over_time(df, output_dir):
     Returns:
     - None: Saves the trend plot to the specified directory.
     """
-    if 'timestamp' not in df:
-        print("Error: 'timestamp' column is missing in the dataset.")
+    # Check if required columns are in the DataFrame
+    if 'timestamp' not in df or 'sentiment_label' not in df:
+        print("Error: 'timestamp' and/or 'sentiment_label' column(s) are missing in the dataset.")
         return
 
-    # Extract star rating as a numeric value
-    df['star_rating'] = df['sentiment_label'].str.extract(r'(\d+)').astype(float)
+    # Convert timestamp to datetime format
+    try:
+        df['datetime'] = pd.to_datetime(df['timestamp'], unit='s')
+        df['date'] = df['datetime'].dt.date
+    except Exception as e:
+        print(f"Error in converting 'timestamp' to datetime: {e}")
+        return
 
-    # Ensure 'timestamp' is in datetime format and extract the date
-    df['date'] = pd.to_datetime(df['timestamp']).dt.date
+    # Extract numeric star ratings from 'sentiment_label'
+    try:
+        df['star_rating'] = pd.to_numeric(df['sentiment_label'].str.extract(r'(\d+)')[0], errors='coerce')
+    except Exception as e:
+        print(f"Error in extracting star ratings: {e}")
+        return
+
+    # Drop rows with missing or invalid star ratings
+    df = df.dropna(subset=['star_rating'])
 
     # Calculate the average star rating per day
     daily_star_rating = df.groupby('date')['star_rating'].mean()
@@ -58,8 +71,11 @@ def plot_star_rating_trend_over_time(df, output_dir):
     plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
     plt.tight_layout()
 
-    # Save the plot
+    # Ensure the output directory exists
+    os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, 'star_rating_trend_over_time.png')
+
+    # Save the plot
     plt.savefig(output_path, dpi=300)
     plt.close()
 
@@ -184,33 +200,41 @@ def sentiment_accuracy(df, output_dir):
     plt.close()
 
 
-
-
-def emotion_distribution_piechart(df, output_dir):
+def sentiment_distribution_piechart(df, output_dir):
     """
-    Create a pie chart showing the distribution of tuples by emotion_label and save it locally.
-
+    Create a pie chart showing the distribution of tuples by sentiment_label and save it locally.
     Args:
-    - df (pd.DataFrame): DataFrame containing 'emotion_label' column.
-    - output_dir (str): Directory where the plot will be saved.
-
+        df (pd.DataFrame): DataFrame containing 'sentiment_label' column.
+        output_dir (str): Directory where the plot will be saved.
     Returns:
-    - None: Saves the pie chart to the specified directory.
-    """
-    # Count the number of tuples per emotion label
+    None: Saves the pie chart to the specified directory."""  # Define the order of the stars
+
+
+    star_order = ['1 star', '2 stars', '3 stars', '4 stars', '5 stars']
+
+    # Count the number of tuples per sentiment label and sort based on the star order
     counts = df['sentiment_label'].value_counts()
+    counts = counts.reindex(star_order, fill_value=0)  # Ensure all stars are included and ordered
+
+    # Define a color map to match the order
+    colors = plt.cm.viridis([0.1, 0.3, 0.5, 0.7, 0.9])  # Adjust color shades for a consistent gradient
 
     # Create the pie chart
     plt.figure(figsize=(8, 8))
-    counts.plot(kind='pie', autopct='%1.1f%%', startangle=90, cmap='viridis', legend=True)
-    plt.title('Distribution of Rating stars')
+    counts.plot(
+        kind='pie',
+        autopct='%1.1f%%',
+        startangle=90,
+        colors=colors,
+        legend=True
+    )
+    plt.title('Distribution of Rating Stars')
     plt.ylabel('')  # Remove y-axis label for a cleaner pie chart
 
     # Save the chart
     output_path = os.path.join(output_dir, 'sentiment_label_distribution_pie_chart.png')
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
-
 
 def plot_sentiment_distribution(df, output_dir):
     """
@@ -490,7 +514,7 @@ def analyze_sentiment_and_emotions(df, output_dir):
     plot_emotion_distribution(df, output_dir)
     plot_emotion_by_sentiment(df, output_dir)
     plot_emotion_sentiment_heatmap(df, output_dir)
-    emotion_distribution_piechart(df, output_dir)
+    sentiment_distribution_piechart(df, output_dir)
     emotion_accuracy(df, output_dir)
     sentiment_accuracy(df, output_dir)
     emotion_pie_chart(df, output_dir)
