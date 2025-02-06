@@ -1,61 +1,74 @@
-# tboi-reviews-analysis
 
-# Project Title: Sentiment Analysis on *The Binding of Isaac* Community
+# Steam Review Analysis
 
-## Table of Contents
+This project involves scraping comments, performing sentiment and emotion analysis, topic modeling, and visualizing the results. Below are the steps to set up and run the project.
 
-1. [Introduction](#introduction)  
-2. [Features](#features)  
-3. [Objectives](#objectives)  
-4. [Tools and Technologies](#tools-and-technologies)  
-5. [Installation](#installation)  
-6. [Usage](#usage)  
-7. [Results](#results)  
-8. [Future Work](#future-work)  
-9. [Contributing](#contributing)  
-10. [License](#license)  
-11. [Contact](#contact)
+## Prerequisites
 
----
+Before you start, make sure you have the following:
 
-## Introduction
+- Python 3.8 or later
+- Pip (Python package manager)
 
-This project aims to perform sentiment analysis on *The Binding of Isaac* (TBOI) community by analyzing user-generated content from platforms such as forums, Steam reviews, and social media. The insights derived will help understand player opinions about various aspects of the game, including gameplay mechanics, expansions, and updates.
+## Steps
 
----
+### 1. Clone the Project
 
-## Features
+First, clone the repository to your local machine:
 
-- Collects and preprocesses text data from multiple sources.
-- Performs sentiment analysis using multiple NLP techniques.
-- Identifies trends and key topics discussed in the community.
-- Visualizes sentiment trends and topic distributions.
+```bash
+git clone https://github.com/LobsterRavioli/steam-review-analysis.git
+cd <project_directory>
+```
 
----
+### 2. Install Requirements
 
-## Objectives
+Install the necessary dependencies listed in the `requirements.txt` file:
 
-- Analyze player sentiment and feedback.
-- Identify recurring themes and popular topics.
-- Provide actionable insights for game improvements.
+```bash
+pip install -r requirements.txt
+```
 
----
+### 3. Run `driver.py` to Fetch Comments
 
-## Tools and Technologies
+Use `driver.py` to fetch comments from a specified source. For an example, choose "mini" as the data source.
 
-- **Programming Language**: Python  
-- **Libraries and Frameworks**:
-  - NLP: NLTK, spaCy, TextBlob, VADER
-  - Machine Learning: Scikit-learn
-  - Visualization: Matplotlib, Plotly, WordCloud
-- **Data Collection**: Beautiful Soup, Selenium
-- **Others**: Pandas, NumPy
+```bash
+python driver.py
+```
 
----
+This will scrape the comments and save them for further analysis.
 
-## Installation
+### 4. Run `sentiment_emotion_analysis.py`
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/username/repository-name.git
-   cd repository-name
+Once the comments are fetched, run the `sentiment_emotion_analysis.py` script to perform sentiment and emotion analysis on the comments.
+
+```bash
+python sentiment_emotion_analysis.py
+```
+
+This script will analyze the comments and output the sentiment (star-score from 1 to 5) and associated emotions.
+
+### 5. Run `topic_modelling.py`
+
+After performing sentiment and emotion analysis, run `topic_modelling.py` to extract the main topics from the comments.
+
+```bash
+python topic_modelling.py
+```
+
+This script will identify the most frequent topics from the fetched comments and display the results.
+
+### 6. Run `plotter.py` for Visualization
+
+Finally, run `plotter.py` to visualize the results of sentiment analysis, emotion analysis, and topic modeling.
+
+```bash
+python plotter.py
+```
+
+This will generate the relevant plots and charts to help interpret the results visually.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

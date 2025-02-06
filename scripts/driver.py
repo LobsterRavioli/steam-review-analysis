@@ -118,7 +118,7 @@ def choose_version():
     (complete dataset).
     """
     print("Please choose the version to run:")
-    print("1. Run Mini Version (for a quick test with a small dataset [~3000 entries])")
+    print("1. Run Mini Version (for a quick test with a small dataset)")
     print("2. Run Full Version")
 
     while True:
