@@ -2,6 +2,7 @@
 # Steam Review Analysis
 
 This project involves scraping comments, performing sentiment and emotion analysis, topic modeling, and visualizing the results. Below are the steps to set up and run the project.
+You can find the complete analysis in the main root folder in the pdf named "analysis.pdf"
 
 ## Prerequisites
 
